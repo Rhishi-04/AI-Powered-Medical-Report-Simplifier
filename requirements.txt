@@ -1,0 +1,21 @@
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Data Validation
+pydantic>=2.9.0
+pydantic-settings>=2.6.0
+
+# OCR
+pytesseract==0.3.10
+pdf2image==1.17.0
+Pillow==10.4.0
+
+# LLM
+huggingface-hub==0.20.3
+requests==2.31.0
+
+# Utilities
+python-dotenv==1.0.0
+

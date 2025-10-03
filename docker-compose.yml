@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  medical-report-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_URL=http://localhost:11434
+      - LLM_MODEL_NAME=llama3.2:latest
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    volumes:
+      - ./sample_data:/app/sample_data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

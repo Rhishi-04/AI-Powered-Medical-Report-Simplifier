@@ -64,17 +64,6 @@ curl -X POST http://localhost:8000/process/text \
 ## 3. Process Image Report (OCR + Pipeline)
 ```bash
 curl -X POST http://localhost:8000/process/image \
-  -F "image=@sample_data/sample_medical_report.png"
-```
-**Response:** Same as text processing above
-
----
-
-## 4. Test with Sample Data
-```bash
-
-#image OCR
-curl -X POST http://localhost:8000/process/image \
   -F "file=@sample_data/Gemini_Generated_Image_augn2laugn2laugn.png" \
   --max-time 120
 

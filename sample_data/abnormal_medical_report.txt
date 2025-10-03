@@ -1,0 +1,33 @@
+URGENT LAB RESULTS - ABNORMAL VALUES DETECTED
+
+Patient: Sarah Johnson, Age: 62, Female
+Date: October 3, 2025
+Status: CRITICAL VALUES PRESENT
+
+COMPLETE BLOOD COUNT:
+Hemoglobin: 8.5 g/dL (LOW - Normal: 12.0-15.5)
+WBC: 15,800 /uL (HIGH - Normal: 4,500-11,000)
+Platelet Count: 95,000 /uL (LOW - Normal: 150,000-450,000)
+
+CHEMISTRY PANEL:
+Glucose: 285 mg/dL (HIGH - Normal: 70-100)
+Creatinine: 2.8 mg/dL (HIGH - Normal: 0.6-1.2)
+BUN: 45 mg/dL (HIGH - Normal: 7-20)
+Sodium: 138 mEq/L (LOW - Normal: 136-145)
+Potassium: 5.8 mEq/L (HIGH - Normal: 3.5-5.0)
+
+THYROID FUNCTION:
+TSH: 8.9 mIU/L (HIGH - Normal: 0.4-4.0)
+Free T4: 0.7 ng/dL (LOW - Normal: 0.8-1.8)
+
+DIABETES MONITORING:
+HbA1c: 9.8% (HIGH - Normal: <5.7%)
+
+CRITICAL VALUES SUMMARY:
+- Severe anemia (low hemoglobin)
+- Elevated white blood cells suggesting infection
+- Acute kidney injury (high creatinine, BUN)
+- Uncontrolled diabetes (high glucose, HbA1c)
+- Hypothyroidism (high TSH, low T4)
+
+URGENT: Patient requires immediate medical attention.

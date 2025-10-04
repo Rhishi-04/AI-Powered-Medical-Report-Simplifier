@@ -76,18 +76,6 @@ curl -X POST http://localhost:8000/process/file \
 ###  **Main API Endpoint**
 
 ** Complete Pipeline** - Single endpoint handles all file types (.txt, image, PDF) through all 4 steps:
-
-```bash
-# For typed medical reports (.txt files)
-curl -X POST http://localhost:8000/process/file \
-  -F "file=@sample_data/abnormal_medical_report.txt"
-
-# For scanned medical reports (image/PDF files)  
-curl -X POST http://localhost:8000/process/file \
-  -F "file=@sample_data/sample_medical_report.png"
-```
-
-** Complete 4-Step Pipeline:**
 1. **OCR/Text Extraction** (for images/text/PDFs)
 2. **Test Normalization** 
 3. **Hallucination Validation**

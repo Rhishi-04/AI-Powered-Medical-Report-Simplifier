@@ -135,8 +135,7 @@ async def root():
         "endpoints": {
             "POST /process/file": "Process file input (.txt, image, PDF)",
             "POST /ocr": "OCR only (Step 1)",
-            "POST /normalize": "Normalize tests (Step 2)",
-            "POST /summarize": "Generate summary (Step 3)"
+            "POST /normalize": "Normalize tests (Step 2)"
         }
     }
 

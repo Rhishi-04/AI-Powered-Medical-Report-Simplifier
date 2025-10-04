@@ -62,15 +62,83 @@ API available at: http://localhost:8000
 # Health check
 curl http://localhost:8000/health
 
-# Process text medical report
-curl -X POST http://localhost:8000/process/text \
-  -H "Content-Type: application/json" \
-  -d '{"text": "CBC: Hemoglobin 14.2 g/dL (Normal), WBC 7,500 /uL (Normal)"}'
+# Process typed medical report (.txt file)
+curl -X POST http://localhost:8000/process/file \
+  -F "file=@sample_data/abnormal_medical_report.txt"
 
-# Process image medical report
-curl -X POST http://localhost:8000/process/image \
+# Process scanned medical report (image file)
+curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/sample_medical_report.png"
 ```
+
+## 📋 API Usage Examples
+
+### 🏥 **Main API Endpoint**
+
+The system accepts **all types of medical report files**:
+
+**📄 Universal File Input** - For typed (.txt) and scanned (image/PDF) medical reports
+```bash
+# For typed medical reports (.txt files)
+curl -X POST http://localhost:8000/process/file \
+  -F "file=@sample_data/abnormal_medical_report.txt"
+
+# For scanned medical reports (image/PDF files)  
+curl -X POST http://localhost:8000/process/file \
+  -F "file=@sample_data/sample_medical_report.png"
+```
+
+### 📊 **Expected Output (Matches Company Requirements)**
+
+**Input:** `CBC: Hemoglobin 10.2 g/dL (Low), WBC 11,200 /uL (High)`
+
+**Output:**
+```json
+{
+  "tests": [
+    {
+      "name": "Hemoglobin",
+      "value": 10.2,
+      "unit": "g/dL",
+      "status": "low",
+      "ref_range": {"low": 12.0, "high": 15.0}
+    },
+    {
+      "name": "WBC",
+      "value": 11200,
+      "unit": "/uL",
+      "status": "high",
+      "ref_range": {"low": 4000, "high": 11000}
+    }
+  ],
+  "summary": "Low hemoglobin and high white blood cell count.",
+  "explanations": [
+    {
+      "text": "Low hemoglobin may relate to anemia.",
+      "test_name": "Hemoglobin"
+    },
+    {
+      "text": "High WBC can occur with infections.",
+      "test_name": "WBC"
+    }
+  ],
+  "status": "ok"
+}
+```
+
+### 🛡️ **Guardrails & Error Handling**
+
+**Hallucination Detection:**
+```json
+{
+  "status": "unprocessed",
+  "reason": "hallucinated tests not present in input"
+}
+```
+
+### 📚 **API Documentation**
+- **Interactive API Explorer**: http://localhost:8000/docs
+- **Detailed Documentation**: http://localhost:8000/redoc
 
 ## 🏗️ Architecture
 
@@ -90,7 +158,7 @@ Input (Text/Image) → OCR → LLM Normalization → Validation → Summarizatio
 ```
 ├── api/                      # Core API package
 │   ├── __init__.py          # Package initialization
-│   ├── app.py               # FastAPI application + models + routes
+│   ├── app.py               # FastAPI application + models + 
 │   ├── services.py          # All business logic services
 │   └── config.py            # Configuration settings
 ├── requirements.txt         # Python dependencies

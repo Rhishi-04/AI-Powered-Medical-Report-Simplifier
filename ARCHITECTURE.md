@@ -13,7 +13,7 @@ graph TB
     %% API Gateway
     subgraph "FastAPI Application"
         C[FastAPI Server<br/>Port 8000]
-        D[API Routes<br/>/process/text<br/>/process/image<br/>/ocr<br/>/normalize<br/>/health]
+        D[API Routes<br/>/process/file<br/>/ocr<br/>/normalize<br/>/health]
     end
     
     %% Core Services
@@ -101,7 +101,7 @@ sequenceDiagram
     participant Validator
     participant Summarizer
     
-    Client->>FastAPI: POST /process/text or /process/image
+    Client->>FastAPI: POST /process/file
     FastAPI->>OCR: Extract text (if image)
     OCR-->>FastAPI: Raw text + confidence
     
@@ -210,7 +210,6 @@ flowchart TD
 - **Scalability**: Horizontal scaling via Docker containers
 
 ### 📊 **API Usage**
-- **Text Processing**: `POST /process/text` - Complete pipeline (normalization → validation → summary)
-- **Image Processing**: `POST /process/image` - Complete pipeline (OCR → normalization → validation → summary)
+- **Universal File Processing**: `POST /process/file` - Complete pipeline for all file types (.txt, image, PDF)
 - **Individual Steps**: `POST /ocr`, `POST /normalize` - For testing individual components
 

@@ -133,8 +133,7 @@ async def root():
         "message": "AI-Powered Medical Report Simplifier API",
         "version": "1.0.0",
         "endpoints": {
-            "POST /process/text": "Process text input",
-            "POST /process/image": "Process image input",
+            "POST /process/file": "Process file input (.txt, image, PDF)",
             "POST /ocr": "OCR only (Step 1)",
             "POST /normalize": "Normalize tests (Step 2)",
             "POST /summarize": "Generate summary (Step 3)"
@@ -206,101 +205,51 @@ async def normalize_tests(input_data: TextInput):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/process/text")
-async def process_text_report(input_data: TextInput):
+@app.post("/process/file")
+async def process_file_report(file: UploadFile = File(...)):
     """
-    Complete pipeline: Process text input through all steps.
+    Complete pipeline: Process file input (text or image/PDF) through all steps.
     
     Args:
-        input_data: TextInput with medical report text
+        file: Text file (.txt), Image file, or PDF file containing medical report
         
     Returns:
         FinalResponse or ErrorResponse
     """
     try:
-        logger.info("Text processing pipeline started")
+        logger.info(f"File processing pipeline started for file: {file.filename}")
         
-        # Step 1: Already have text, skip OCR
-        raw_text = input_data.text
-        
-        # Step 2: Normalize tests
-        logger.info("Step 2: Normalizing tests...")
-        normalized_result = normalizer_service.normalize_tests(raw_text)
-        
-        # Step 3: Validate extraction (hallucination check)
-        logger.info("Step 3: Validating extraction...")
-        validation_result = validator_service.validate_extraction(
-            raw_text,
-            normalized_result["tests"]
-        )
-        
-        # Check validation status
-        if validation_result["status"] == "unprocessed":
-            logger.warning(f"Validation failed: {validation_result['reason']}")
-            return ErrorResponse(
-                status="unprocessed",
-                reason=validation_result["reason"]
-            )
-        
-        # Step 4: Generate patient-friendly summary
-        logger.info("Step 4: Generating summary...")
-        validated_tests = validation_result.get("tests", normalized_result["tests"])
-        summary_result = summarizer_service.generate_summary(validated_tests)
-        
-        # Step 5: Combine results
-        final_response = FinalResponse(
-            tests=validated_tests,
-            summary=summary_result["summary"],
-            explanations=summary_result["explanations"],
-            status="ok"
-        )
-        
-        logger.info("Text processing completed successfully")
-        return final_response
-        
-    except Exception as e:
-        logger.error(f"Text processing failed: {str(e)}")
-        return ErrorResponse(
-            status="unprocessed",
-            reason=f"Processing error: {str(e)}"
-        )
-
-
-@app.post("/process/image")
-async def process_image_report(file: UploadFile = File(...)):
-    """
-    Complete pipeline: Process image input through all steps (OCR + normalization + summary).
-    
-    Args:
-        file: Image or PDF file containing medical report
-        
-    Returns:
-        FinalResponse or ErrorResponse
-    """
-    try:
-        logger.info(f"Image processing pipeline started for file: {file.filename}")
-        
-        # Step 1: OCR
-        logger.info("Step 1: Performing OCR...")
+        # Read file content
         file_bytes = await file.read()
         
-        if file.content_type.startswith('image/'):
-            ocr_result = ocr_service.extract_from_image(file_bytes)
-        elif file.content_type == 'application/pdf':
-            ocr_result = ocr_service.extract_from_pdf(file_bytes)
+        # Check if it's a text file
+        if file.content_type == "text/plain" or file.filename.endswith('.txt'):
+            # For text files, read content directly
+            logger.info("Processing text file...")
+            raw_text = file_bytes.decode('utf-8')
+            logger.info(f"Extracted text content ({len(raw_text)} characters)")
+            
+        elif file.content_type.startswith('image/') or file.content_type == 'application/pdf':
+            # For image/PDF files, use OCR
+            logger.info("Processing image/PDF file with OCR...")
+            
+            if file.content_type.startswith('image/'):
+                ocr_result = ocr_service.extract_from_image(file_bytes)
+            else:  # PDF
+                ocr_result = ocr_service.extract_from_pdf(file_bytes)
+            
+            raw_text = ocr_result["raw_text"]
+            
+            # Check OCR confidence
+            if ocr_result["ocr_confidence"] < 0.3:
+                return ErrorResponse(
+                    status="unprocessed",
+                    reason=f"OCR confidence too low: {ocr_result['ocr_confidence']}"
+                )
         else:
             return ErrorResponse(
                 status="unprocessed",
-                reason=f"Unsupported file type: {file.content_type}"
-            )
-        
-        raw_text = ocr_result["raw_text"]
-        
-        # Check OCR confidence
-        if ocr_result["ocr_confidence"] < 0.3:
-            return ErrorResponse(
-                status="unprocessed",
-                reason=f"OCR confidence too low: {ocr_result['ocr_confidence']}"
+                reason=f"Unsupported file type: {file.content_type}. Please upload .txt, image, or PDF files."
             )
         
         # Step 2: Normalize tests
@@ -335,11 +284,11 @@ async def process_image_report(file: UploadFile = File(...)):
             status="ok"
         )
         
-        logger.info("Image processing completed successfully")
+        logger.info(f"File processing completed successfully for {file.filename}")
         return final_response
         
     except Exception as e:
-        logger.error(f"Image processing failed: {str(e)}")
+        logger.error(f"File processing failed: {str(e)}")
         return ErrorResponse(
             status="unprocessed",
             reason=f"Processing error: {str(e)}"

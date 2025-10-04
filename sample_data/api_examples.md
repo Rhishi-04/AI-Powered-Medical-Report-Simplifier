@@ -18,11 +18,10 @@ curl -X GET http://localhost:8000/health
 
 ---
 
-## 2. Process Text Report (Complete Pipeline)
+## 2. Process File Report (Complete Pipeline)
 ```bash
-curl -X POST http://localhost:8000/process/text \
-  -H "Content-Type: application/json" \
-  -d '{"text": "CBC: Hemoglobin 10.2 g/dL (Low), WBC 11,200 /uL (High)"}'
+curl -X POST http://localhost:8000/process/file \
+  -F "file=@sample_data/abnormal_medical_report.txt"
 ```
 
 **Response:**
@@ -63,7 +62,18 @@ curl -X POST http://localhost:8000/process/text \
 
 ## 3. Process Image Report (OCR + Pipeline)
 ```bash
-curl -X POST http://localhost:8000/process/image \
+curl -X POST http://localhost:8000/process/file \
+  -F "file=@sample_data/sample_medical_report.png"
+```
+**Response:** Same as text processing above
+
+---
+
+## 4. Test with Sample Data
+```bash
+
+#image OCR
+curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/Gemini_Generated_Image_augn2laugn2laugn.png" \
   --max-time 120
 
@@ -75,11 +85,9 @@ curl -X POST http://localhost:8000/process/image \
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/health` | GET | Health check |
-| `/process/text` | POST | Complete pipeline for text |
-| `/process/image` | POST | Complete pipeline for images |
+| `/process/file` | POST | Complete pipeline for all files (.txt, image, PDF) |
 | `/ocr` | POST | OCR extraction only |
 | `/normalize` | POST | Test normalization only |
-| `/summarize` | POST | Summary generation only |
 
 ---
 

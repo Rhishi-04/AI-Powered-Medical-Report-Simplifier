@@ -133,9 +133,7 @@ async def root():
         "message": "AI-Powered Medical Report Simplifier API",
         "version": "1.0.0",
         "endpoints": {
-            "POST /process/file": "Process file input (.txt, image, PDF)",
-            "POST /ocr": "OCR only (Step 1)",
-            "POST /normalize": "Normalize tests (Step 2)"
+            "POST /process/file": "Complete pipeline for all file types (.txt, image, PDF)"
         }
     }
 
@@ -144,64 +142,6 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
-
-
-@app.post("/ocr", response_model=OCRResponse)
-async def extract_text(file: UploadFile = File(...)):
-    """
-    Step 1: Extract text from image using OCR.
-    
-    Args:
-        file: Image or PDF file
-        
-    Returns:
-        OCRResponse with raw text, lines, and confidence
-    """
-    try:
-        logger.info(f"OCR request received for file: {file.filename}")
-        
-        # Read file bytes
-        file_bytes = await file.read()
-        
-        # Determine file type and process accordingly
-        if file.content_type.startswith('image/'):
-            result = ocr_service.extract_from_image(file_bytes)
-        elif file.content_type == 'application/pdf':
-            result = ocr_service.extract_from_pdf(file_bytes)
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Unsupported file type: {file.content_type}. Please upload an image or PDF."
-            )
-        
-        return OCRResponse(**result)
-        
-    except Exception as e:
-        logger.error(f"OCR processing failed: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/normalize", response_model=NormalizedTestsResponse)
-async def normalize_tests(input_data: TextInput):
-    """
-    Step 2: Normalize medical tests from raw text.
-    
-    Args:
-        input_data: TextInput with raw medical report text
-        
-    Returns:
-        NormalizedTestsResponse with extracted and normalized tests
-    """
-    try:
-        logger.info("Normalization request received")
-        
-        result = normalizer_service.normalize_tests(input_data.text)
-        
-        return NormalizedTestsResponse(**result)
-        
-    except Exception as e:
-        logger.error(f"Normalization failed: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/process/file")

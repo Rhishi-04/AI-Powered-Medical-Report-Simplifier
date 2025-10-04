@@ -13,7 +13,7 @@ graph TB
     %% API Gateway
     subgraph "FastAPI Application"
         C[FastAPI Server<br/>Port 8000]
-        D[API Routes<br/>/process/file<br/>/ocr<br/>/normalize<br/>/health]
+        D[API Routes<br/>/process/file<br/>/health]
     end
     
     %% Core Services
@@ -210,6 +210,5 @@ flowchart TD
 - **Scalability**: Horizontal scaling via Docker containers
 
 ### 📊 **API Usage**
-- **Universal File Processing**: `POST /process/file` - Complete pipeline for all file types (.txt, image, PDF)
-- **Individual Steps**: `POST /ocr`, `POST /normalize` - For testing individual components
+- **Complete Pipeline**: `POST /process/file` - Handles all file types (.txt, image, PDF) through all 4 steps
 

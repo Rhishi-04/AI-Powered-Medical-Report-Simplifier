@@ -18,7 +18,7 @@ curl -X GET http://localhost:8000/health
 
 ---
 
-## 2. Process File Report (Complete Pipeline)
+## 2. Process File Report (Complete 4-Step Pipeline)
 ```bash
 curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/abnormal_medical_report.txt"
@@ -60,7 +60,7 @@ curl -X POST http://localhost:8000/process/file \
 
 ---
 
-## 3. Process Image Report (OCR + Pipeline)
+## 3. Process Image Report (Complete 4-Step Pipeline)
 ```bash
 curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/sample_medical_report.png"
@@ -85,9 +85,7 @@ curl -X POST http://localhost:8000/process/file \
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/health` | GET | Health check |
-| `/process/file` | POST | Complete pipeline for all files (.txt, image, PDF) |
-| `/ocr` | POST | OCR extraction only |
-| `/normalize` | POST | Test normalization only |
+| `/process/file` | POST | Complete 4-step pipeline for all files (.txt, image, PDF) |
 
 ---
 

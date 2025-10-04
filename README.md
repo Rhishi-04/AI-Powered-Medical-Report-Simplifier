@@ -2,7 +2,7 @@
 
 A backend service that transforms medical reports (text or scanned images) into patient-friendly explanations using AI.
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 ### Prerequisites
 - Python 3.8+
@@ -56,7 +56,7 @@ A backend service that transforms medical reports (text or scanned images) into 
 
 API available at: http://localhost:8000
 
-## 🧪 Quick Test
+##  Quick Test
 
 ```bash
 # Health check
@@ -71,11 +71,11 @@ curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/sample_medical_report.png"
 ```
 
-## 📋 API Usage Examples
+##  API Usage Examples
 
-### 🏥 **Main API Endpoint**
+###  **Main API Endpoint**
 
-**📄 Complete Pipeline** - Single endpoint handles all file types (.txt, image, PDF) through all 4 steps:
+** Complete Pipeline** - Single endpoint handles all file types (.txt, image, PDF) through all 4 steps:
 
 ```bash
 # For typed medical reports (.txt files)
@@ -87,13 +87,13 @@ curl -X POST http://localhost:8000/process/file \
   -F "file=@sample_data/sample_medical_report.png"
 ```
 
-**✅ Complete 4-Step Pipeline:**
+** Complete 4-Step Pipeline:**
 1. **OCR/Text Extraction** (for images/PDFs)
 2. **Test Normalization** 
 3. **Hallucination Validation**
 4. **Patient-Friendly Summary**
 
-### 📊 **Expected Output (Matches Company Requirements)**
+###  **Expected Output (Matches Company Requirements)**
 
 **Input:** `CBC: Hemoglobin 10.2 g/dL (Low), WBC 11,200 /uL (High)`
 
@@ -131,7 +131,7 @@ curl -X POST http://localhost:8000/process/file \
 }
 ```
 
-### 🛡️ **Guardrails & Error Handling**
+###  **Guardrails & Error Handling**
 
 **Hallucination Detection:**
 ```json
@@ -141,11 +141,11 @@ curl -X POST http://localhost:8000/process/file \
 }
 ```
 
-### 📚 **API Documentation**
+###  **API Documentation**
 - **Interactive API Explorer**: http://localhost:8000/docs
 - **Detailed Documentation**: http://localhost:8000/redoc
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Processing Pipeline
 ```

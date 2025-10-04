@@ -88,7 +88,7 @@ curl -X POST http://localhost:8000/process/file \
 ```
 
 ** Complete 4-Step Pipeline:**
-1. **OCR/Text Extraction** (for images/PDFs)
+1. **OCR/Text Extraction** (for images/text/PDFs)
 2. **Test Normalization** 
 3. **Hallucination Validation**
 4. **Patient-Friendly Summary**
